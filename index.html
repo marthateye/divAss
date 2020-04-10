@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Week One JavaScript Assignment</title>
+	<script src="jquery.min.js"></script>
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+
+</head>
+<body>
+	<div class="row">
+		<h1 align="center">DIV Students and Graduates Training Programs</h1> <br>
+		<p><b>Week 1:</b> Write a JavaScript program that accept two integers and display the larger integer. </p>
+		<p><b>Week 2:</b> Write a JavaScript for loop that will iterate from 0 to 15. For each iteration, it will check if the current number is odd or even and display a message to the screen.</p>
+		<p><b>Week 3:</b> Write a Hash Table class that stores strings in a hash table, where keys are calculated using the first two letters of the string. </p>
+		<div class="col-md-12">
+
+			<div class="col-md-4">
+				<h2>Week One</h2>
+				<input type="number" name="firstNum" id="firstNum">
+				<br>
+				<input type="number" name="SecNum" id="secNum">
+				<button id="compare" onclick="compNum()"> Compare Numbers</button>
+				<div id="popup" style="margin-top: 20px">
+					
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<h2>Week Two</h2>
+				<div>
+					<input type="number" name="startNum" id="startNum" value="0">
+					<br>
+					<input type="number" name="endNum" id="endNum" value="15">
+					<button id="forbtn" onclick="forNum()"> Run For Loop</button>
+				</div>
+				<div id="forNumb" style="margin-top: 20px"></div>
+			</div>
+
+			<div class="col-md-4">
+				<h2>Week Three</h2>
+				<div>
+					<input type="text" name="inpStr" id="inpStr" onchange="hashStr()">
+				</div>
+				<div >
+					<table style="width:100%; margin-top: 20px" id="hashTable">
+						 <tr>
+						    <th>Key</th>
+						    <th>Value</th>
+						    <th>Hash Index</th>
+						 </tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		//Week One Coding Assignment
+		//Global variables for checkNum() function
+		var fNum = 0;
+		var sNum = 0;
+		var ans = 0;
+
+		function compNum(){
+			fNum = Number($('#firstNum').val());
+			sNum = Number($('#secNum').val());
+			if (!Number.isInteger(fNum) || !Number.isInteger(sNum))
+			{
+				var y = '<div> Numbers must be Integers</div>';
+				$('#popup').append(y);
+			}else{
+				checkNum(fNum, sNum);
+			}
+		}
+
+		function checkNum(fNum, sNum){
+			ans=0;
+			$('#popup').html($('#popup').data('old-state'));
+			if (fNum > sNum){
+				ans = fNum
+			}
+			else if (fNum < sNum){
+				ans = sNum
+			}
+			else{
+				ans = 'The numbers are the same';
+			}
+			console.log(ans)
+			var y = '<div>' + ans +'</div>';
+			$('#popup').append(y);
+			//resetting the values back to zero
+			//fNum, sNum = 0;
+		}
+		//End of Week One Assignment
+
+		//Week Two Coding Assignment
+		var start_num;
+		var end_num;
+		function forNum(){
+			start_num = Number($('#startNum').val());
+			end_num = Number($('#endNum').val());
+			forloop(start_num, end_num);
+		}
+		
+		var res;
+		function forloop(start_num, end_num){
+			console.log(end_num)
+			for (var i = start_num; i < end_num; i++){
+				if (i%2 == 0){
+					res = i + ' is an even number'
+				}
+				else{
+					res = i + ' is a odd number'
+				}
+				var x = '<div>'+ res +'</div>'
+				$('#forNumb').append(x);
+			}
+		}
+		//End of Week Two Assignment
+
+
+		//Week Three Coding Assignment
+		//Global varibales for hashfun()
+		var value;
+		function hashStr(){
+			value = $('#inpStr').val()
+			hashfun(value);
+		}
+		let storage = [];
+		function hashfun(value){
+			var key = value.substring(0,2)
+			var i;
+			var hashindex;
+			var asciicode;
+			var totCode = 0;
+			//This hash code uses the ascii character codes of each letter multiplied by it's position in the string 
+			for (i=0; i < value.length; i++){
+				asciicode = value.charCodeAt(i) *(i+1)
+				totCode += asciicode
+			}
+
+			hashindex = totCode % 2069;
+			console.log(hashindex)
+			//var x = '<div> '+ [key, value] +' Index: '+ hashindex+'</div>'
+			 var x = '<tr> <td>'+ key+'</td> <td>'+value+'</td> <td>'+hashindex+'</td> </tr>'
+
+			// Make sure no empty strings are passed.
+			if (storage[hashindex] === undefined && value!=""){
+				storage[hashindex] = [[key, value]];
+				console.log(storage)
+				
+				$('#hashTable').append(x);
+			}
+			else {
+				//var bool checks if same entry has been entered in has table
+				var bool = true;
+				for (var i = 0; i < storage[hashindex].length; i++){
+					//Check if the same key and value has been entered. 
+					if (storage[hashindex][i][0] === key && storage[hashindex][i][1] != value){
+						//If same key but different values at the same index, push new key and value to hash table
+						storage[hashindex].push([key,value]);
+						bool = true;
+						$('#hashTable').append(x);
+					}
+					else if(storage[hashindex][i][0] != key){
+						bool = false
+					}
+				}
+				// If same index but different keys and values
+				if (bool === false){
+					storage[hashindex].push([key,value]);
+					console.log(storage);
+					$('#hashTable').append(x);
+				}	
+			}			
+
+		}
+
+		$(document).ready(function () {
+			$('#popup').data('old-state', $('#popup').html());
+		
+		});
+		
+	</script>
+
+</body>
+</html>
